@@ -13,7 +13,7 @@ services:
         # Uncomment these lines to persist data on the local filesystem.
             - PGDATA=/var/lib/postgresql/data/pgdata
         volumes:
-            - pgdata:/var/lib/postgresql/data/pgdata
+            - ./pgdata:/var/lib/postgresql/data/pgdata
         ports:
             - "5432:5432"
             
@@ -35,16 +35,16 @@ services:
             - DAGS_FOLDER=/usr/local/airflow/dags
             - BASE_LOG_FOLDER=/usr/local/airflow/logs
             - PLUGINS_FOLDER=/usr/local/airflow/plugins
-            #- AIRFLOW__WEBSERVER__AUTHENTICATE=true
-            #- AIRFLOW__WEBSERVER__RBAC=true
+            - AIRFLOW__WEBSERVER__AUTHENTICATE=true
+            - AIRFLOW__WEBSERVER__RBAC=true
             - AIRFLOW__WEBSERVER__AUTH_BACKEND=airflow.contrib.auth.backends.password_auth
             - AIRFLOW__WEBSERVER__NAVBAR_COLOR=#2D572C
             - AIRFLOW__CORE__SQL_ALCHEMY_POOL_SIZE=200
         volumes:
-            - ${PWD-.}/dags:/usr/local/airflow/dags
+            - ./dags:/usr/local/airflow/dags
             # Uncomment to include custom plugins
-            - ${PWD-.}/plugins:/usr/local/airflow/plugins
-            - ${PWD-.}/requirements.txt:/requirements.txt
+            - ./plugins:/usr/local/airflow/plugins
+            - ./requirements.txt:/requirements.txt
         ports:
             - "8080:8080"
         command: webserver
@@ -72,10 +72,10 @@ services:
         depends_on:
             - webserver
         volumes:
-            - ${PWD-.}/dags:/usr/local/airflow/dags
+            - ./dags:/usr/local/airflow/dags
             # Uncomment to include custom plugins
-            - ${PWD-.}/plugins:/usr/local/airflow/plugins
-            - ${PWD-.}/requirements.txt:/requirements.txt
+            - ./plugins:/usr/local/airflow/plugins
+            - ./requirements.txt:/requirements.txt
         environment:
             - LOAD_EX=n
             - FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
@@ -97,10 +97,10 @@ services:
         depends_on:
             - scheduler
         volumes:
-            - ${PWD-.}/dags:/usr/local/airflow/dags
+            - ./dags:/usr/local/airflow/dags
             # Uncomment to include custom plugins
-            - ${PWD-.}/plugins:/usr/local/airflow/plugins
-            - ${PWD-.}/requirements.txt:/requirements.txt
+            - ./plugins:/usr/local/airflow/plugins
+            - ./requirements.txt:/requirements.txt
         environment:
             - FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
             - EXECUTOR=Celery
@@ -114,7 +114,3 @@ services:
             - PLUGINS_FOLDER=/usr/local/airflow/plugins
             - AIRFLOW__CORE__SQL_ALCHEMY_POOL_SIZE=200
         command: worker
-        
-volumes:
-  pgdata:
-    external: true
