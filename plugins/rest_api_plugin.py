@@ -528,7 +528,7 @@ class REST_API(BaseView):
         return DagBag()
 
     # '/' Endpoint where the Admin page is which allows you to view the APIs available and trigger them
-    @has_access
+    #@has_access
     @expose('/')
     def list(self):
         logging.info("REST_API.list() called")
@@ -553,7 +553,7 @@ class REST_API(BaseView):
                            )
 
     # '/api' REST Endpoint where API requests should all come in
-    @has_access
+    #@has_access
     @csrf.exempt  # Exempt the CSRF token
     @expose('/api', methods=["GET", "POST"])
     @http_token_secure  # On each request,
