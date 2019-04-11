@@ -36,9 +36,9 @@ airflow_webserver_base_url = configuration.get('webserver', 'BASE_URL')
 airflow_base_log_folder = configuration.get('core', 'BASE_LOG_FOLDER')
 airflow_dags_folder = configuration.get('core', 'DAGS_FOLDER')
 log_loading = True #configuration.getboolean("rest_api_plugin", "LOG_LOADING") if configuration.has_option("rest_api_plugin", "LOG_LOADING") else False
-filter_loading_messages_in_cli_response = False #configuration.getboolean("rest_api_plugin", "FILTER_LOADING_MESSAGES_IN_CLI_RESPONSE") if configuration.has_option("rest_api_plugin", "FILTER_LOADING_MESSAGES_IN_CLI_RESPONSE") else True
+filter_loading_messages_in_cli_response = True #configuration.getboolean("rest_api_plugin", "FILTER_LOADING_MESSAGES_IN_CLI_RESPONSE") if configuration.has_option("rest_api_plugin", "FILTER_LOADING_MESSAGES_IN_CLI_RESPONSE") else True
 airflow_rest_api_plugin_http_token_header_name = "rest_api_plugin_http_token" #configuration.get("rest_api_plugin", "REST_API_PLUGIN_HTTP_TOKEN_HEADER_NAME") if configuration.has_option("rest_api_plugin", "REST_API_PLUGIN_HTTP_TOKEN_HEADER_NAME") else "rest_api_plugin_http_token"
-airflow_expected_http_token = None #configuration.get("rest_api_plugin", "REST_API_PLUGIN_EXPECTED_HTTP_TOKEN") if configuration.has_option("rest_api_plugin", "REST_API_PLUGIN_EXPECTED_HTTP_TOKEN") else None
+airflow_expected_http_token = "s.4vbTstcymOkNqxCSsZwYFtjL" #configuration.get("rest_api_plugin", "REST_API_PLUGIN_EXPECTED_HTTP_TOKEN") if configuration.has_option("rest_api_plugin", "REST_API_PLUGIN_EXPECTED_HTTP_TOKEN") else None
 
 # Using UTF-8 Encoding so that response messages don't have any characters in them that can't be handled
 os.environ['PYTHONIOENCODING'] = 'utf-8'
@@ -528,7 +528,7 @@ class REST_API(BaseView):
         return DagBag()
 
     # '/' Endpoint where the Admin page is which allows you to view the APIs available and trigger them
-    #@has_access
+    @has_access
     @expose('/')
     def list(self):
         logging.info("REST_API.list() called")
@@ -553,7 +553,6 @@ class REST_API(BaseView):
                            )
 
     # '/api' REST Endpoint where API requests should all come in
-    #@has_access
     @csrf.exempt  # Exempt the CSRF token
     @expose('/api', methods=["GET", "POST"])
     @http_token_secure  # On each request,
